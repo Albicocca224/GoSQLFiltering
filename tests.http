@@ -1,0 +1,180 @@
+### Base URL variable
+@baseUrl = http://localhost:8080
+
+### ============================================================
+### USERS — Basic pagination
+### ============================================================
+
+### Get all users (default page 1, size 10, order by id)
+GET {{baseUrl}}/users
+
+###
+
+### Page 1, 5 per page
+GET {{baseUrl}}/users?page=1&page_size=5
+
+###
+
+### Page 2, 5 per page
+GET {{baseUrl}}/users?page=2&page_size=5
+
+###
+
+### Page 3, 5 per page
+GET {{baseUrl}}/users?page=3&page_size=5
+
+### ============================================================
+### USERS — Sorting (order_by + order_dir)
+### ============================================================
+
+### Order by name ASC
+GET {{baseUrl}}/users?page=1&page_size=10&order_by=name&order_dir=asc
+
+###
+
+### Order by name DESC
+GET {{baseUrl}}/users?page=1&page_size=10&order_by=name&order_dir=desc
+
+###
+
+### Order by birth_date ASC
+GET {{baseUrl}}/users?page=1&page_size=10&order_by=birth_date&order_dir=asc
+
+###
+
+### Order by birth_date DESC
+GET {{baseUrl}}/users?page=1&page_size=10&order_by=birth_date&order_dir=desc
+
+###
+
+### Order by email ASC
+GET {{baseUrl}}/users?page=1&page_size=10&order_by=email&order_dir=asc
+
+###
+
+### Invalid order_by column (should fall back to default: id)
+GET {{baseUrl}}/users?order_by=password&order_dir=asc
+
+### ============================================================
+### USERS — Filter by ID
+### ============================================================
+
+### Filter by ID = 1 (Alice)
+GET {{baseUrl}}/users?id=1
+
+###
+
+### Filter by ID = 6 (Frank)
+GET {{baseUrl}}/users?id=6
+
+###
+
+### Filter by non-existent ID
+GET {{baseUrl}}/users?id=9999
+
+### ============================================================
+### USERS — Filter by Name
+### ============================================================
+
+### Filter by name containing "alice"
+GET {{baseUrl}}/users?name=alice
+
+###
+
+### Filter by name containing "a" (multiple results)
+GET {{baseUrl}}/users?name=a
+
+###
+
+### Filter by name containing "on"
+GET {{baseUrl}}/users?name=on
+
+### ============================================================
+### USERS — Filter by Email
+### ============================================================
+
+### Filter by email containing "bob"
+GET {{baseUrl}}/users?email=bob
+
+###
+
+### Filter by email containing "example"
+GET {{baseUrl}}/users?email=example
+
+### ============================================================
+### USERS — Filter by Gender
+### ============================================================
+
+### Filter female users
+GET {{baseUrl}}/users?gender=female
+
+###
+
+### Filter male users
+GET {{baseUrl}}/users?gender=male
+
+###
+
+### Filter other
+GET {{baseUrl}}/users?gender=other
+
+### ============================================================
+### USERS — Filter by Birth Date
+### ============================================================
+
+### Filter by exact birth date
+GET {{baseUrl}}/users?birth_date=1995-03-12
+
+###
+
+### Invalid date format (expect 400)
+GET {{baseUrl}}/users?birth_date=12-03-1995
+
+### ============================================================
+### USERS — Combined filters (3 fields + pagination + order_by)
+### ============================================================
+
+### Female users with "a" in name, page 1, size 5, order by name
+GET {{baseUrl}}/users?name=a&gender=female&page=1&page_size=5&order_by=name&order_dir=asc
+
+###
+
+### Male users, ordered by birth_date DESC, page 1, size 5
+GET {{baseUrl}}/users?gender=male&page=1&page_size=5&order_by=birth_date&order_dir=desc
+
+###
+
+### Name contains "a", email contains "example", ordered by id, page 1 size 3
+GET {{baseUrl}}/users?name=a&email=example&page=1&page_size=3&order_by=id&order_dir=asc
+
+### ============================================================
+### COMMON FRIENDS
+### ============================================================
+
+### Common friends of Alice (1) and Bob (2) — expects Carol, David, Eva
+GET {{baseUrl}}/users/common-friends?user1=1&user2=2
+
+###
+
+### Common friends of Frank (6) and Grace (7) — expects Henry, Iris, Jack
+GET {{baseUrl}}/users/common-friends?user1=6&user2=7
+
+###
+
+### Users with no common friends
+GET {{baseUrl}}/users/common-friends?user1=19&user2=21
+
+###
+
+### Same user for both (expect 400)
+GET {{baseUrl}}/users/common-friends?user1=1&user2=1
+
+###
+
+### Missing user2 param (expect 400)
+GET {{baseUrl}}/users/common-friends?user1=1
+
+###
+
+### Non-existent users (expect empty result)
+GET {{baseUrl}}/users/common-friends?user1=999&user2=998
